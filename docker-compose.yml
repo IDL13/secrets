@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+
+  fastapi:
+
+    build:
+      context: .
+      network: host
+
+    container_name: fastapi
+
+    ports:
+      - "8000:8000"
+
+    depends_on:
+      - mongo_db
+
+  mongo_db:
+    container_name: mongo_db
+
+    ports:
+      - 27027:27027
+
+    restart: always
+
+    command: mongod --port 27027
+
+    volumes:
+      - /my-mongo-dev-deb-data:/data/db
+
+    image: mongo:latest
+
+
