@@ -5,7 +5,7 @@ from .handlers import Handlers
 
 class App():
     
-    def new(handlers = Handlers("secrets")):
+    def new(handlers = Handlers("secrets")) -> FastAPI:
         app = FastAPI()
         
         @app.get("/")
@@ -19,6 +19,10 @@ class App():
         @app.post("/secret/{secret_key}")
         async def secret(secret_key: str, request: SecretRequest):
             return handlers.secret(secret_key, request)
+        
+        @app.post("/generate/{time}")
+        async def generate_ttl(time: int, request: GenerateRequest):
+            return handlers.generate_ttl(time, request)
     
         return app 
     

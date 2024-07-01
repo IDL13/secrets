@@ -58,3 +58,26 @@ class Handlers:
             bad_request = "Bad Request (Secret_key & passhprase not found)"
             
             return GenerateResponse(secret_key=bad_request).model_dump()
+
+    def generate_ttl(self, time: int, request: GenerateRequest):
+        request_data = jsonable_encoder(request)
+        
+        secret_key = hashlib.sha256(request_data["secret"].encode()).hexdigest()
+
+        passphrase = MD5(request_data["passphrase"]).encrypt()
+        
+        json = {
+            "secret": request_data["secret"],
+            "passphrase": passphrase,
+            "secret_key": secret_key
+        }
+
+        try:
+            _ = self.mongo_db.add_ttl_index(json, time)
+            
+            return GenerateResponse(secret_key=secret_key).model_dump()
+        
+        except:
+            bad_request = "Bad Request (Check your request)"
+            
+            return GenerateResponse(secret_key=bad_request).model_dump()
