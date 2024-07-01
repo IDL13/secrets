@@ -2,8 +2,8 @@ import hashlib
 
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from app.handlers import Handlers
-from app import App
+from src.handlers import Handlers
+from src.app import App
 
 client = TestClient(App.new(handlers=Handlers("tests")))
 
